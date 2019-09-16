@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1051570295947",
+    "firebase_url": "https://campmanager-473a0.firebaseio.com",
+    "project_id": "campmanager-473a0",
+    "storage_bucket": "campmanager-473a0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1051570295947:android:4f2b3ae2ec832655",
+        "android_client_info": {
+          "package_name": "android.example.campmanager"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1051570295947-df0k7g7fgausg1tnhu3mhiv0tv21am2m.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "android.example.campmanager",
+            "certificate_hash": "46a030139351e8ef4bf167811de86dcf88bfffb7"
+          }
+        },
+        {
+          "client_id": "1051570295947-ud8eropskebhcv0l0kdp6btj00amchpr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDwEM22-w5NZf6fVS0gszZKPwUwhKxReI0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1051570295947-ud8eropskebhcv0l0kdp6btj00amchpr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

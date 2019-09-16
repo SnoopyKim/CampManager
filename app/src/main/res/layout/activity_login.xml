@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".LoginActivity">
+
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/AppTitle"
+        android:textSize="40dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.3"/>
+
+    <RelativeLayout
+        android:id="@+id/rlLoginFormP"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="@id/tvTitle"
+        app:layout_constraintRight_toRightOf="@id/tvTitle"
+        android:visibility="visible">
+
+        <EditText
+            android:id="@+id/etSearchStudent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/search_student_name" />
+        <EditText
+            android:id="@+id/etBirth"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/etSearchStudent"
+            android:hint="학생의 생년월일을 입력하세요\n ex.20070101"/>
+        <Button
+            android:id="@+id/btnSearchStudent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            style="@style/ButtonSearch"
+            android:text="@string/search"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/etBirth"/>
+
+        <EditText
+            android:id="@+id/etEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/input_email"
+            android:visibility="gone"/>
+        <EditText
+            android:id="@+id/etPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/input_password"
+            android:layout_below="@+id/etEmail"
+            android:visibility="gone"/>
+        <Button
+            android:id="@+id/btnLogin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            style="@style/ButtonSearch"
+            android:text="@string/button_login"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/etPassword"
+            android:visibility="gone"/>
+
+    </RelativeLayout>
+
+
+    <Button
+        android:id="@+id/btnChangeForm"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:text="@string/login_teacher"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/rlLoginFormP"
+        app:layout_constraintStart_toStartOf="@id/rlLoginFormP"
+        app:layout_constraintTop_toBottomOf="@+id/rlLoginFormP"
+        app:layout_constraintVertical_bias="0.2" />
+
+    <Button
+        android:id="@+id/btnRegister"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@android:color/white"
+        android:text="@string/register_teacher"
+        app:layout_constraintEnd_toEndOf="@+id/btnChangeForm"
+        app:layout_constraintStart_toStartOf="@id/btnChangeForm"
+        app:layout_constraintTop_toBottomOf="@+id/btnChangeForm" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

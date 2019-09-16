@@ -1,3 +1,21 @@
 <resources>
     <string name="app_name">Camp Manager</string>
+    <string name="search_student_name">학생의 이름을 입력하세요</string>
+    <string name="search">검 색</string>
+    <string name="login_teacher"><u>선생님 로그인</u></string>
+    <string name="login_parents"><u>부모님 로그인</u></string>
+    <string name="button_login">로그인</string>
+    <string name="input_email">이메일을 입력하세요</string>
+    <string name="input_password">비밀번호를 입력하세요</string>
+    <string name="register_teacher">선생님 등록</string>
+    <string name="input_name">이름을 입력하세요</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="menu_list">선생/학생 리스트</string>
+    <string name="menu_daily">날짜별 테스트</string>
+    <string name="menu_profile">프로필</string>
+    <string name="input_password_confirm">비밀번호를 확인하세요</string>
+    <string name="register">등 록</string>
 </resources>
