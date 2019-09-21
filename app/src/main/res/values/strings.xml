@@ -24,4 +24,11 @@
     <string name="listfragment">ListFragment</string>
     <string name="dailyfragment">DailyFragment</string>
     <string name="profilefragment">ProfileFragment</string>
+    <string name="add_student">학생 추가</string>
+    <string name="input_student_birth">학생의 생년월일을 입력하세요\nex.20070101</string>
+    <string name="add_profile_image">프로필 사진 추가</string>
+    <string name="confirm">확 인</string>
+    <string name="check_inputs">이름과 생년월일을 입력했는지 확인하세요</string>
+    <string name="profile_upload_success">프로필 사진 업로드에 성공했습니다</string>
+    <string name="profile_upload_failure">프로필 사진 업로드에 실패했습니다</string>
 </resources>

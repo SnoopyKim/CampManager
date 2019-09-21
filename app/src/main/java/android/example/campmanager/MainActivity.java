@@ -15,6 +15,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -81,9 +82,9 @@ public class MainActivity extends AppCompatActivity {
 
         if (requestCode == ADD_STUDENT_CODE) {
             if (resultCode == RESULT_OK) {
-
+                Log.d("MainActivity", "onActivityResult: OK");
             } else if (resultCode == RESULT_CANCELED) {
-
+                Log.d("MainActivity", "onActivityResult: CANCELED");
             }
         }
     }

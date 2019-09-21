@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
@@ -37,8 +38,8 @@ public class ListFragment extends Fragment {
         adapter = new StudentListAdapter(getContext(), studentList);
         studentListView.setAdapter(adapter);
 
-        ImageButton btnAddStudent = v.findViewById(R.id.btnAddStudent);
-        btnAddStudent.setOnClickListener(new View.OnClickListener() {
+        FloatingActionButton fabAddStudent = v.findViewById(R.id.fab);
+        fabAddStudent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), AddStudentActivity.class);

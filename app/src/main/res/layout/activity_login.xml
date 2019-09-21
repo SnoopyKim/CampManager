@@ -39,7 +39,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/etSearchStudent"
-            android:hint="학생의 생년월일을 입력하세요\n ex.20070101"/>
+            android:hint="@string/input_student_birth"/>
         <Button
             android:id="@+id/btnSearchStudent"
             android:layout_width="match_parent"

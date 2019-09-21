@@ -6,4 +6,69 @@
     android:layout_height="match_parent"
     tools:context=".AddStudentActivity">
 
+    <TextView
+        android:id="@+id/tv_add_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.15"
+        android:text="@string/add_student"
+        android:textColor="@android:color/black"
+        android:textSize="24dp"
+        android:textStyle="bold"/>
+
+    <ImageView
+        android:id="@+id/iv_student_image"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_add_title"
+        android:layout_marginTop="16dp"
+        android:src="@drawable/default_profile"/>
+
+    <Button
+        android:id="@+id/btn_add_profile"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@android:color/white"
+        android:text="@string/add_profile_image"
+        app:layout_constraintEnd_toEndOf="@+id/iv_student_image"
+        app:layout_constraintStart_toStartOf="@id/iv_student_image"
+        app:layout_constraintTop_toBottomOf="@+id/iv_student_image" />
+
+    <EditText
+        android:id="@+id/et_student_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@id/iv_student_image"
+        app:layout_constraintEnd_toEndOf="@id/iv_student_image"
+        app:layout_constraintTop_toBottomOf="@+id/btn_add_profile"
+        android:layout_marginTop="16dp"
+        android:hint="@string/search_student_name" />
+    <EditText
+        android:id="@+id/et_student_birth"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@id/iv_student_image"
+        app:layout_constraintEnd_toEndOf="@id/iv_student_image"
+        app:layout_constraintTop_toBottomOf="@+id/et_student_name"
+        android:layout_marginTop="8dp"
+        android:hint="@string/input_student_birth"/>
+    <Button
+        android:id="@+id/btn_add_student"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        style="@style/ButtonSearch"
+        app:layout_constraintStart_toStartOf="@id/iv_student_image"
+        app:layout_constraintEnd_toEndOf="@id/iv_student_image"
+        app:layout_constraintTop_toBottomOf="@+id/et_student_birth"
+        android:text="@string/confirm"/>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
