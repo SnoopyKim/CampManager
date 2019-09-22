@@ -21,6 +21,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -50,7 +51,7 @@ public class RegisterActivity extends AppCompatActivity {
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String stEmail = etEmail.getText().toString();
+                final String stEmail = etEmail.getText().toString();
                 String stPassword = etPassword.getText().toString();
                 String stConfirm = etConfirm.getText().toString();
                 final String stName = etName.getText().toString();
@@ -66,12 +67,14 @@ public class RegisterActivity extends AppCompatActivity {
 
                                     Map<String, Object> teacher = new HashMap<>();
                                     teacher.put("name", stName);
+                                    teacher.put("email", stEmail);
+                                    teacher.put("photo", LoginActivity.defaultProfileUri.toString());
 
-                                    db.collection("teachers")
-                                            .add(teacher)
-                                            .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                                    db.collection("teachers").document(user.getUid())
+                                            .set(teacher)
+                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
                                                 @Override
-                                                public void onComplete(@NonNull Task<DocumentReference> task) {
+                                                public void onComplete(@NonNull Task<Void> task) {
                                                     if (task.isSuccessful()) {
                                                         setResult(RESULT_OK);
                                                     } else {

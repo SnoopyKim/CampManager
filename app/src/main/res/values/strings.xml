@@ -31,4 +31,11 @@
     <string name="check_inputs">이름과 생년월일을 입력했는지 확인하세요</string>
     <string name="profile_upload_success">프로필 사진 업로드에 성공했습니다</string>
     <string name="profile_upload_failure">프로필 사진 업로드에 실패했습니다</string>
+    <string name="data_receive_fail">Data receive failed</string>
+    <string name="data_receive_success">Data receive success</string>
+    <string name="change_profile_image">프로필 사진 변경</string>
+    <string name="logout">로그아웃</string>
+    <string name="teacher">선생님</string>
+    <string name="birth">생년월일</string>
+    <string name="email">이메일</string>
 </resources>

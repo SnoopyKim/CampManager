@@ -1,6 +1,7 @@
 package android.example.campmanager;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+
+import java.util.Calendar;
 import java.util.List;
 
 public class StudentListAdapter extends RecyclerView.Adapter<StudentListAdapter.StudentViewHolder> {
@@ -32,11 +36,19 @@ public class StudentListAdapter extends RecyclerView.Adapter<StudentListAdapter.
     @Override
     public void onBindViewHolder(@NonNull StudentViewHolder holder, int position) {
         Student student = mStudents.get(position);
-        String stName = student.getName();
-        String stAge = student.getAge();
 
-        holder.tvName.setText(stName);
-        holder.tvAge.setText(stAge);
+        holder.tvName.setText(student.getName());
+
+        int current = Calendar.getInstance().get(Calendar.YEAR);
+        int birthYear = Integer.parseInt(student.getAge().substring(0,3));
+        holder.tvAge.setText(current-birthYear + "세");
+
+        Glide
+            .with(mInflater.getContext())
+            .load(student.getPhoto())
+            .centerCrop()
+            .placeholder(R.drawable.default_profile)
+            .into(holder.ivImage);
     }
 
     @Override
@@ -48,8 +60,6 @@ public class StudentListAdapter extends RecyclerView.Adapter<StudentListAdapter.
 
         private final ImageView ivImage;
         private final TextView tvName, tvAge;
-
-
 
         public StudentViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -63,6 +73,9 @@ public class StudentListAdapter extends RecyclerView.Adapter<StudentListAdapter.
         @Override
         public void onClick(View v) {
             int position = getLayoutPosition();
+            Intent intent = new Intent(mInflater.getContext(), StudentActivity.class);
+            intent.putExtra("ID", mStudents.get(position).getId());
+            mInflater.getContext().startActivity(intent);
         }
     }
 }

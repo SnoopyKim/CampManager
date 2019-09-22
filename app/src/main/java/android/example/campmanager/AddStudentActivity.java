@@ -32,7 +32,7 @@ import java.util.Map;
 
 public class AddStudentActivity extends AppCompatActivity {
 
-    static final int GET_IMAGE_CODE = 3;
+    public static final int GET_IMAGE_CODE = 3;
 
     private FirebaseFirestore db;
     private StorageReference studentRef;
@@ -47,7 +47,7 @@ public class AddStudentActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_student);
 
         db = FirebaseFirestore.getInstance();
-        studentRef = FirebaseStorage.getInstance().getReference("students");
+        studentRef = FirebaseStorage.getInstance().getReference();
 
         etStudentName = findViewById(R.id.et_student_name);
         etStudentBirth = findViewById(R.id.et_student_birth);
@@ -104,7 +104,7 @@ public class AddStudentActivity extends AppCompatActivity {
 
         Map<String, Object> student = new HashMap<>();
         student.put("name", name);
-        student.put("birth", Integer.parseInt(birth));
+        student.put("birth", birth);
 
         db.collection("students")
                 .add(student)
@@ -112,11 +112,10 @@ public class AddStudentActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull final Task<DocumentReference> task) {
                         if (task.isSuccessful()) {
-                            setResult(RESULT_OK);
                             if (profileUri != null) {
-                                uploadStudentProfileImage(studentRef.child(task.getResult().getId()), task.getResult());
+                                uploadStudentProfileImage(studentRef.child("students").child(task.getResult().getId()), task.getResult());
                             } else {
-                                finish();
+                                uploadStudentDefaultImage(studentRef, task.getResult());
                             }
                         } else {
                             setResult(RESULT_CANCELED);
@@ -137,15 +136,34 @@ public class AddStudentActivity extends AppCompatActivity {
             }).addOnCompleteListener(new OnCompleteListener<Uri>() {
                 @Override
                 public void onComplete(@NonNull Task<Uri> task) {
-                    if (task.isSuccessful()) {
+                    if (task.isSuccessful() && task.getResult()!=null) {
                         Toast.makeText(getApplicationContext(), getString(R.string.profile_upload_success), Toast.LENGTH_SHORT).show();
                         dRef.update("photo", task.getResult().toString());
+                        setResult(RESULT_OK);
                     } else {
                         Toast.makeText(getApplicationContext(), getString(R.string.profile_upload_failure), Toast.LENGTH_SHORT).show();
                         dRef.update("photo", "");
+                        setResult(RESULT_CANCELED);
                     }
                     finish();
                 }
             });
     }
+    private void uploadStudentDefaultImage(final StorageReference sRef, final DocumentReference dRef) {
+        sRef.child("default_profile.png").getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+            @Override
+            public void onComplete(@NonNull Task<Uri> task) {
+                if (task.isSuccessful() && task.getResult()!=null) {
+                    dRef.update("photo", task.getResult().toString());
+                    setResult(RESULT_OK);
+                } else {
+                    Toast.makeText(getApplicationContext(), getString(R.string.profile_upload_failure), Toast.LENGTH_SHORT).show();
+                    dRef.update("photo", "");
+                    setResult(RESULT_CANCELED);
+                }
+                finish();
+            }
+        });
+    }
+
 }

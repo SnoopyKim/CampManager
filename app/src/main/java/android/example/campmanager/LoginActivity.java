@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -25,6 +26,7 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -32,6 +34,7 @@ import java.util.Map;
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
     public static final int REGISTER_TEACHER_CODE = 1;
+    public static Uri defaultProfileUri;
 
     FirebaseAuth auth;
     FirebaseFirestore db;
@@ -67,6 +70,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         btnRegister = findViewById(R.id.btnRegister);
         btnRegister.setOnClickListener(this);
+
+        FirebaseStorage.getInstance().getReference("default_profile.png").getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+            @Override
+            public void onComplete(@NonNull Task<Uri> task) {
+                if (task.isSuccessful() && task.getResult()!=null) {
+                    defaultProfileUri = task.getResult();
+                }
+            }
+        });
+
     }
 
     @Override
@@ -75,6 +88,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         FirebaseUser currentUser = auth.getCurrentUser();
         if (currentUser != null) {
             // Auto-Login
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
         }
     }
 
