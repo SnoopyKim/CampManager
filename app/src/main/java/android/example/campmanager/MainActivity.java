@@ -32,8 +32,11 @@ import android.widget.Toast;
 public class MainActivity extends AppCompatActivity {
 
     public static final int ADD_STUDENT_CODE = 2;
+    public static final int STUDENT_DETAIL = 4;
 
     FirebaseUser user;
+
+    BottomNavigationView navView;
 
     Fragment recentFragment = null;
     FragmentTransaction ft;
@@ -45,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        BottomNavigationView navView = findViewById(R.id.nav_view);
+        navView = findViewById(R.id.nav_view);
         navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         user = FirebaseAuth.getInstance().getCurrentUser();
@@ -63,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void switchFragment(Fragment fragment, String tag) {
+        Log.d("MainActivity", "switchFragment: " + tag);
         ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.fm, fragment, tag);
         ft.commit();
@@ -98,15 +102,19 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == ADD_STUDENT_CODE) {
             if (resultCode == RESULT_OK) {
                 Log.d("MainActivity", "onActivityResult: OK");
+                navView.setSelectedItemId(R.id.navigation_list);
             } else if (resultCode == RESULT_CANCELED) {
                 Log.d("MainActivity", "onActivityResult: CANCELED");
             }
+        } else if (requestCode == STUDENT_DETAIL) {
+            Log.d("STUDENT_DETAIL", "onActivityResult: ");
+
         } else if (requestCode == AddStudentActivity.GET_IMAGE_CODE && resultCode == RESULT_OK && data != null) {
             //Bitmap thumbnail = data.getParcelableExtra("data");
             Uri profileUri = data.getData();
             // Do work with photo saved at fullPhotoUri
-            final StorageReference storageReference = FirebaseStorage.getInstance().getReference();
-            storageReference.child(mode).child(id).putFile(profileUri)
+            final StorageReference storageReference = FirebaseStorage.getInstance().getReference().child(mode).child(id);
+            storageReference.putFile(profileUri)
                     .continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                         @Override
                         public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {

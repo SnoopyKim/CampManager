@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,19 +20,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
-
-import static android.app.Activity.RESULT_CANCELED;
-import static android.app.Activity.RESULT_OK;
 
 
 /**
@@ -93,12 +86,6 @@ public class ProfileFragment extends Fragment {
         return v;
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-    }
-
     void setUserData(final String mode, String id) {
         Log.d(getTag(), "setUserData: id: " + id);
         db = FirebaseFirestore.getInstance();
@@ -127,14 +114,15 @@ public class ProfileFragment extends Fragment {
     }
 
     private void selectImage() {
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("image/*");
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
         if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
-            startActivityForResult(Intent.createChooser(intent, "Select an Image"), AddStudentActivity.GET_IMAGE_CODE);
+            getActivity().startActivityForResult(Intent.createChooser(intent, "Select an Image"), AddStudentActivity.GET_IMAGE_CODE);
         }
     }
 
     public void drawImage(String url) {
+        Log.d("ProfileChangeProcess", "drawImage: " + url);
         Glide
             .with(getContext())
             .load(url)

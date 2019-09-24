@@ -2,8 +2,11 @@ package android.example.campmanager;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -14,7 +17,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import org.w3c.dom.Text;
 
 public class StudentActivity extends AppCompatActivity {
 
@@ -27,7 +29,7 @@ public class StudentActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_student);
-        getSupportActionBar().setHomeButtonEnabled(true);
+        setBackButton();
 
         db = FirebaseFirestore.getInstance();
 
@@ -55,4 +57,16 @@ public class StudentActivity extends AppCompatActivity {
             }
         });
     }
+
+
+    private void setBackButton() {
+        ImageButton ibBack = findViewById(R.id.btn_back);
+        ibBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+    }
+
 }

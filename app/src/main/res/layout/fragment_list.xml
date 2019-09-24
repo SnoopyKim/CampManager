@@ -13,7 +13,9 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_margin="16dp"
-        android:src="@drawable/ic_person_add_black_24dp" />
+        android:src="@drawable/ic_person_add_black_24dp"
+        android:backgroundTint="@android:color/black"
+        android:tint="@android:color/white"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_student"

@@ -71,15 +71,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         btnRegister = findViewById(R.id.btnRegister);
         btnRegister.setOnClickListener(this);
 
-        FirebaseStorage.getInstance().getReference("default_profile.png").getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
-            @Override
-            public void onComplete(@NonNull Task<Uri> task) {
-                if (task.isSuccessful() && task.getResult()!=null) {
-                    defaultProfileUri = task.getResult();
-                }
-            }
-        });
-
     }
 
     @Override

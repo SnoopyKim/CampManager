@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.example.campmanager.R;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -60,29 +61,22 @@ public class RegisterActivity extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
-                                    FirebaseUser user = auth.getCurrentUser();
-                                    UserProfileChangeRequest request = new UserProfileChangeRequest.Builder()
-                                            .setDisplayName(stName).build();
-                                    user.updateProfile(request);
+                                    FirebaseStorage.getInstance().getReference("default_profile.png").getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Uri> task) {
+                                            if (task.isSuccessful() && task.getResult()!=null) {
+                                                FirebaseUser user = auth.getCurrentUser();
+                                                UserProfileChangeRequest request = new UserProfileChangeRequest.Builder()
+                                                        .setDisplayName(stName)
+                                                        .setPhotoUri(task.getResult())
+                                                        .build();
+                                                user.updateProfile(request);
 
-                                    Map<String, Object> teacher = new HashMap<>();
-                                    teacher.put("name", stName);
-                                    teacher.put("email", stEmail);
-                                    teacher.put("photo", LoginActivity.defaultProfileUri.toString());
+                                                addTeacherData(user.getUid(), stName, stEmail, task.getResult().toString());
+                                            }
+                                        }
+                                    });
 
-                                    db.collection("teachers").document(user.getUid())
-                                            .set(teacher)
-                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                @Override
-                                                public void onComplete(@NonNull Task<Void> task) {
-                                                    if (task.isSuccessful()) {
-                                                        setResult(RESULT_OK);
-                                                    } else {
-                                                        setResult(RESULT_CANCELED);
-                                                    }
-                                                    finish();
-                                                }
-                                            });
                                 } else {
                                     // If sign in fails, display a message to the user.
                                     Toast.makeText(getApplicationContext(), "Authentication failed.",
@@ -96,4 +90,26 @@ public class RegisterActivity extends AppCompatActivity {
         });
 
     }
+
+    void addTeacherData(String id, String name, String email, String photo) {
+        Map<String, Object> teacher = new HashMap<>();
+        teacher.put("name", name);
+        teacher.put("email", email);
+        teacher.put("photo", photo);
+
+        db.collection("teachers").document(id)
+                .set(teacher)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            setResult(RESULT_OK);
+                        } else {
+                            setResult(RESULT_CANCELED);
+                        }
+                        finish();
+                    }
+                });
+    }
+
 }

@@ -32,7 +32,7 @@ public class ListFragment extends Fragment {
     FirebaseFirestore db;
 
     private RecyclerView studentListView;
-    private StudentListAdapter adapter;
+    public StudentListAdapter adapter;
     private ArrayList<Student> studentList;
 
     public ListFragment() {
@@ -48,7 +48,7 @@ public class ListFragment extends Fragment {
                             for (QueryDocumentSnapshot studentData : task.getResult()) {
                                 String id = studentData.getId();
                                 String name = studentData.get("name").toString();
-                                String age = studentData.get("age").toString();
+                                String age = studentData.get("birth").toString();
                                 String photo = studentData.get("photo").toString();
                                 Student student = new Student(id, name, age, photo);
                                 studentList.add(student);
@@ -69,7 +69,7 @@ public class ListFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_list, container, false);
 
         studentListView = v.findViewById(R.id.rv_student);
-        adapter = new StudentListAdapter(getContext(), studentList);
+        adapter = new StudentListAdapter(getActivity(), studentList);
         studentListView.setAdapter(adapter);
         studentListView.setLayoutManager(new LinearLayoutManager(getContext()));
 
