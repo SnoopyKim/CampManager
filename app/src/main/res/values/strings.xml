@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Camp Manager</string>
     <string name="search_student_name">학생의 이름을 입력하세요</string>
+    <string name="search_student_fail">해당 이름의 학생이 없습니다  생년월일도 확인하세요</string>
     <string name="search">검 색</string>
     <string name="login_teacher"><u>선생님 로그인</u></string>
     <string name="login_parents"><u>부모님 로그인</u></string>
@@ -40,4 +41,9 @@
     <string name="email">이메일</string>
     <string name="view_test_result">테스트 결과 보기</string>
     <string name="choose_date">확인하고 싶은 날짜를 선택하세요</string>
+    <string name="input_eng_result">학생의 영어 성적을 입력하세요</string>
+    <string name="input_math_result">학생의 수학 성적을 입력하세요</string>
+    <string name="input_remarks">학생의 오늘은 어땠나요?</string>
+    <string name="add_daily_result">데일리 결과 추가</string>
+
 </resources>

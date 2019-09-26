@@ -1,6 +1,8 @@
 package android.example.campmanager;
 
-public class Student {
+import java.io.Serializable;
+
+public class Student implements Serializable {
     private String id;
     private String name;
     private String age;
@@ -10,7 +12,7 @@ public class Student {
         Data objects requires that any objects to have a public no-argument constuctor.
         Thi is needed to instantiate that that particular object.
      */
-    public Student() {}
+    public Student() { }
     public Student(String id, String name, String age, String photo) {
         this.id = id;
         this.name = name;

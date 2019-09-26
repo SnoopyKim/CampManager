@@ -1,7 +1,6 @@
 package android.example.campmanager;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,21 +11,20 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 
 import java.util.Calendar;
 import java.util.List;
 
-public class StudentListAdapter extends RecyclerView.Adapter<StudentListAdapter.StudentViewHolder> {
+public class ResultListAdapter extends RecyclerView.Adapter<ResultListAdapter.StudentViewHolder> {
 
-    private MainActivity activity;
+    private TestResultActivity activity;
     private LayoutInflater mInflater;
     private List<Student> mStudents;
     private RequestManager glideRequestManager;
 
-    public StudentListAdapter(Activity activity, List<Student> studentList, RequestManager requestManager) {
-        this.activity = (MainActivity)activity;
+    public ResultListAdapter(TestResultActivity activity, List<Student> studentList, RequestManager requestManager) {
+        this.activity = activity;
         mInflater = LayoutInflater.from(activity);
         mStudents = studentList;
         glideRequestManager = requestManager;
@@ -35,7 +33,7 @@ public class StudentListAdapter extends RecyclerView.Adapter<StudentListAdapter.
     @NonNull
     @Override
     public StudentViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View studentVIew = mInflater.inflate(R.layout.student_list_item, parent, false);
+        View studentVIew = mInflater.inflate(R.layout.student_list_item_grid, parent, false);
         return new StudentViewHolder(studentVIew);
     }
 
@@ -63,7 +61,7 @@ public class StudentListAdapter extends RecyclerView.Adapter<StudentListAdapter.
 
     public class StudentViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        private final ImageView ivImage;
+        private final SquareImageView ivImage;
         private final TextView tvName, tvAge;
 
         public StudentViewHolder(@NonNull View itemView) {
@@ -78,9 +76,7 @@ public class StudentListAdapter extends RecyclerView.Adapter<StudentListAdapter.
         @Override
         public void onClick(View v) {
             int position = getLayoutPosition();
-            Intent intent = new Intent(mInflater.getContext(), StudentActivity.class);
-            intent.putExtra("ID", mStudents.get(position).getId());
-            activity.startActivityForResult(intent, MainActivity.STUDENT_DETAIL_CODE);
+            activity.callDailyData(mStudents.get(position).getId());
         }
     }
 

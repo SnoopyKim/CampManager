@@ -32,7 +32,8 @@ import android.widget.Toast;
 public class MainActivity extends AppCompatActivity {
 
     public static final int ADD_STUDENT_CODE = 2;
-    public static final int STUDENT_DETAIL = 4;
+    public static final int STUDENT_DETAIL_CODE = 4;
+    public static final int DAILY_RESULT_CODE = 5;
 
     FirebaseUser user;
 
@@ -101,15 +102,19 @@ public class MainActivity extends AppCompatActivity {
 
         if (requestCode == ADD_STUDENT_CODE) {
             if (resultCode == RESULT_OK) {
-                Log.d("MainActivity", "onActivityResult: OK");
+                Log.d("MainActivityResult", "ADD_STUDENT_CODE: OK");
                 navView.setSelectedItemId(R.id.navigation_list);
             } else if (resultCode == RESULT_CANCELED) {
-                Log.d("MainActivity", "onActivityResult: CANCELED");
+                Log.d("MainActivityResult", "ADD_STUDENT_CODE: CANCELED");
             }
-        } else if (requestCode == STUDENT_DETAIL) {
-            Log.d("STUDENT_DETAIL", "onActivityResult: ");
+        } else if (requestCode == STUDENT_DETAIL_CODE) {
+            Log.d("MainActivityResult", "STUDENT_DETAIL: ");
+
+        } else if (requestCode == DAILY_RESULT_CODE) {
+            Log.d("MainActivityResult", "DAILY_RESULT: ");
 
         } else if (requestCode == AddStudentActivity.GET_IMAGE_CODE && resultCode == RESULT_OK && data != null) {
+            Log.d("MainActivityResult", "GET_IMAGE_CODE: OK");
             //Bitmap thumbnail = data.getParcelableExtra("data");
             Uri profileUri = data.getData();
             // Do work with photo saved at fullPhotoUri

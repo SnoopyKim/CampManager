@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -69,11 +70,11 @@ public class ListFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_list, container, false);
 
         studentListView = v.findViewById(R.id.rv_student);
-        adapter = new StudentListAdapter(getActivity(), studentList);
+        adapter = new StudentListAdapter(getActivity(), studentList, Glide.with(getActivity()));
         studentListView.setAdapter(adapter);
         studentListView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        FloatingActionButton fabAddStudent = v.findViewById(R.id.fab);
+        FloatingActionButton fabAddStudent = v.findViewById(R.id.fab_add_student);
         fabAddStudent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

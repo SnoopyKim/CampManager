@@ -1,6 +1,7 @@
 package android.example.campmanager;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -24,32 +25,35 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 public class DailyFragment extends Fragment {
 
     FirebaseFirestore db;
 
+    String selectedDate;
+
     public DailyFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_daily, container, false);
 
-        final CalendarView calendarView = v.findViewById(R.id.cv_daily);
+        CalendarView calendarView = v.findViewById(R.id.cv_daily);
+        calendarView.setMaxDate(Calendar.getInstance().getTimeInMillis());
+        selectedDate = new SimpleDateFormat("yyyy/MM/dd", Locale.KOREA).format(calendarView.getDate());
         calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
-                String selectedDate = ""+year+"/"+(month+1)+"/" +dayOfMonth;
+                selectedDate = String.format(Locale.KOREA,"%d/%02d/%02d", year, month+1, dayOfMonth);
                 try {
-                    view.setDate(new SimpleDateFormat("yyyy/MM/dd").parse(selectedDate).getTime(), true, true);
+                    view.setDate(new SimpleDateFormat("yyyy/MM/dd", Locale.KOREA).parse(selectedDate).getTime(), true, true);
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                Toast.makeText(getContext(), selectedDate , Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -57,9 +61,9 @@ public class DailyFragment extends Fragment {
         btnViewResult.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTime(new Date(calendarView.getDate()));
-                Toast.makeText(getContext(),calendar.get(Calendar.DATE)+"", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getActivity(), TestResultActivity.class);
+                intent.putExtra("date", selectedDate);
+                startActivityForResult(intent, MainActivity.DAILY_RESULT_CODE);
             }
         });
 

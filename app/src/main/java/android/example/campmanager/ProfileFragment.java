@@ -20,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -37,7 +38,7 @@ public class ProfileFragment extends Fragment {
     ImageView ivProfile;
     TextView tvUserName, tvUserType, tvUserEmail;
 
-    Uri profileUri;
+    public RequestManager glideRequestManager;
 
     public static ProfileFragment newInstance(final String mode, String id) {
         ProfileFragment pf = new ProfileFragment();
@@ -50,6 +51,12 @@ public class ProfileFragment extends Fragment {
     }
 
     public ProfileFragment() { }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        glideRequestManager = Glide.with(getActivity());
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -100,14 +107,18 @@ public class ProfileFragment extends Fragment {
                         String stUserName = task.getResult().get("name").toString();
                         String stUserEmail = task.getResult().get("email").toString();
 
-                        drawImage(stUserProfile);
-                        tvUserName.setText(stUserName);
-                        tvUserType.setText(getString(R.string.teacher));
-                        tvUserEmail.setText(stUserEmail);
+                        if (getActivity()!=null) {
+                            drawImage(stUserProfile);
+                            tvUserName.setText(stUserName);
+                            tvUserType.setText(getString(R.string.teacher));
+                            tvUserEmail.setText(stUserEmail);
+                        }
                     } else {
                         // when user is parent or student.
-                        Toast.makeText(getActivity(), getString(R.string.data_receive_fail), Toast.LENGTH_SHORT).show();
+
                     }
+                } else {
+                    Toast.makeText(getActivity(), getString(R.string.data_receive_fail), Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -121,14 +132,18 @@ public class ProfileFragment extends Fragment {
         }
     }
 
-    public void drawImage(String url) {
+    public void drawImage(final String url) {
         Log.d("ProfileChangeProcess", "drawImage: " + url);
-        Glide
-            .with(getContext())
-            .load(url)
-            .centerCrop()
-            .placeholder(R.drawable.default_profile)
-            .into(ivProfile);
+        ivProfile.post(new Runnable() {
+            @Override
+            public void run() {
+                glideRequestManager
+                        .load(url)
+                        .centerCrop()
+                        .placeholder(R.drawable.default_profile)
+                        .into(ivProfile);
+            }
+        });
     }
 
 }

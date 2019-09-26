@@ -11,6 +11,7 @@ import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -42,6 +43,7 @@ public class AddStudentActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_student);
+        setBackButton();
 
         db = FirebaseFirestore.getInstance();
         studentRef = FirebaseStorage.getInstance().getReference();
@@ -163,4 +165,13 @@ public class AddStudentActivity extends AppCompatActivity {
         });
     }
 
+    private void setBackButton() {
+        ImageButton ibBack = findViewById(R.id.btn_back);
+        ibBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+    }
 }
