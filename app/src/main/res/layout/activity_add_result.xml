@@ -42,7 +42,7 @@
         android:layout_marginTop="16dp"
         android:padding="16dp"
         android:hint="@string/search_student_name"
-        android:inputType="text"/>
+        android:inputType="textMultiLine"/>
     <EditText
         android:id="@+id/et_student_birth"
         android:layout_width="0dp"

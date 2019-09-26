@@ -36,6 +36,8 @@ public class AddResultActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_result);
         setBackButton();
 
+        db = FirebaseFirestore.getInstance();
+
         studentsList = (ArrayList<Student>)getIntent().getSerializableExtra("students");
         date = getIntent().getStringExtra("date");
 
@@ -69,10 +71,10 @@ public class AddResultActivity extends AppCompatActivity {
     }
 
     private void addResult(String id) {
-        Map<String, Object> result = new HashMap<>();
-        result.put("eng", etEng.getText());
-        result.put("math", etMath.getText());
-        result.put("remarks", etRemarks.getText());
+        Map<String, String> result = new HashMap<>();
+        result.put("eng", etEng.getText().toString());
+        result.put("math", etMath.getText().toString());
+        result.put("remarks", etRemarks.getText().toString());
 
         db.collection("students").document(id)
           .collection("daily").document(date)

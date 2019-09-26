@@ -45,5 +45,8 @@
     <string name="input_math_result">학생의 수학 성적을 입력하세요</string>
     <string name="input_remarks">학생의 오늘은 어땠나요?</string>
     <string name="add_daily_result">데일리 결과 추가</string>
+    <string name="english">영어</string>
+    <string name="math">수학</string>
+    <string name="edit">편 집</string>
 
 </resources>

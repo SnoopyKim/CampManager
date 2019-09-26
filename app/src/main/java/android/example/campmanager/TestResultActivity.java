@@ -3,14 +3,23 @@ package android.example.campmanager;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,6 +29,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -27,9 +37,10 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
-public class TestResultActivity extends AppCompatActivity {
+public class TestResultActivity extends AppCompatActivity implements ResultDialog.OnEditListener {
 
     private final int ADD_RESULT = 10;
+    private final int EDIT_RESULT = 11;
 
     FirebaseFirestore db;
     ArrayList<Student> studentList;
@@ -73,6 +84,8 @@ public class TestResultActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == ADD_RESULT && resultCode == RESULT_OK) {
             Log.d("TestResultActivity", "ADD_RESULT: OK");
+        } else if(requestCode == EDIT_RESULT && resultCode == RESULT_OK) {
+            Log.d("TestResultActivity", "EDIT_RESULT: OK");
         }
     }
 
@@ -104,12 +117,40 @@ public class TestResultActivity extends AppCompatActivity {
                 });
     }
 
-    public void callDailyData(String id) {
-
+    public void callResultData(String id, final String name) {
+        db.collection("students").document(id)
+          .collection("daily").document(date.replaceAll("/",""))
+                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful() && task.getResult()!=null && task.getResult().exists()) {
+                            String eng = task.getResult().getString("eng");
+                            String math = task.getResult().getString("math");
+                            String remarks = task.getResult().getString("remarks");
+                            showResultDialog(name, eng, math, remarks);
+                        } else {
+                            showEmptyDialog(name);
+                        }
+                    }
+                });
     }
 
-    public void runDialog() {
+    public void showResultDialog(String name, String eng, String math, String remarks) {
+        ResultDialog resultDialog = ResultDialog.newInstance(name, eng, math, remarks);
+        resultDialog.show(getSupportFragmentManager(), "dialog");
+    }
 
+    public void showEmptyDialog(String name) {
+        Dialog dialog = new AlertDialog.Builder(this)
+                .setTitle(name)
+                .setMessage("저장된 데이터가 없습니다.")
+                .setPositiveButton(getString(R.string.confirm), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                }).create();
+        dialog.show();
     }
 
     private void setBackButton() {
@@ -120,5 +161,17 @@ public class TestResultActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
+    }
+
+    @Override
+    public void onEdit(boolean on) {
+        if (on) {
+            Log.d("TestResultActivity", "onEdit: true");
+            /*
+
+             */
+        } else {
+            Log.d("TestResultActivity", "onEdit: false");
+        }
     }
 }

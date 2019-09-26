@@ -94,7 +94,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     void addTeacherData(String id, String name, String email, String photo) {
-        Map<String, Object> teacher = new HashMap<>();
+        Map<String, String> teacher = new HashMap<>();
         teacher.put("name", name);
         teacher.put("email", email);
         teacher.put("photo", photo);

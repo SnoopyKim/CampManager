@@ -101,7 +101,7 @@ public class AddStudentActivity extends AppCompatActivity {
 
     private void addStudent(String name, String birth) {
 
-        Map<String, Object> student = new HashMap<>();
+        Map<String, String> student = new HashMap<>();
         student.put("name", name);
         student.put("birth", birth);
 

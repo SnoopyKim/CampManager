@@ -76,7 +76,7 @@ public class ResultListAdapter extends RecyclerView.Adapter<ResultListAdapter.St
         @Override
         public void onClick(View v) {
             int position = getLayoutPosition();
-            activity.callDailyData(mStudents.get(position).getId());
+            activity.callResultData(mStudents.get(position).getId(), mStudents.get(position).getName());
         }
     }
 
