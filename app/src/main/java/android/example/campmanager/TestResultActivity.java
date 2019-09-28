@@ -3,6 +3,7 @@ package android.example.campmanager;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -71,6 +72,7 @@ public class TestResultActivity extends AppCompatActivity implements ResultDialo
             public void onClick(View v) {
                 if (!studentList.isEmpty()) {
                     Intent intent = new Intent(getApplicationContext(), AddResultActivity.class);
+                    intent.setAction("add");
                     intent.putExtra("students",studentList);
                     intent.putExtra("date", date.replaceAll("/",""));
                     startActivityForResult(intent, ADD_RESULT);
@@ -117,7 +119,7 @@ public class TestResultActivity extends AppCompatActivity implements ResultDialo
                 });
     }
 
-    public void callResultData(String id, final String name) {
+    public void callResultData(final String id, final String name) {
         db.collection("students").document(id)
           .collection("daily").document(date.replaceAll("/",""))
                 .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -127,7 +129,7 @@ public class TestResultActivity extends AppCompatActivity implements ResultDialo
                             String eng = task.getResult().getString("eng");
                             String math = task.getResult().getString("math");
                             String remarks = task.getResult().getString("remarks");
-                            showResultDialog(name, eng, math, remarks);
+                            showResultDialog(new Result(id, name, eng, math, remarks));
                         } else {
                             showEmptyDialog(name);
                         }
@@ -135,8 +137,9 @@ public class TestResultActivity extends AppCompatActivity implements ResultDialo
                 });
     }
 
-    public void showResultDialog(String name, String eng, String math, String remarks) {
-        ResultDialog resultDialog = ResultDialog.newInstance(name, eng, math, remarks);
+    public void showResultDialog(Result result) {
+        ResultDialog resultDialog = ResultDialog.newInstance(result);
+        resultDialog.setCancelable(false);
         resultDialog.show(getSupportFragmentManager(), "dialog");
     }
 
@@ -164,12 +167,15 @@ public class TestResultActivity extends AppCompatActivity implements ResultDialo
     }
 
     @Override
-    public void onEdit(boolean on) {
-        if (on) {
+    public void onEdit(Result data) {
+        if (data != null) {
             Log.d("TestResultActivity", "onEdit: true");
-            /*
-
-             */
+            Intent intent = new Intent(getApplicationContext(), AddResultActivity.class);
+            intent.setAction("edit");
+            intent.putExtra("students",studentList);
+            intent.putExtra("date", date.replaceAll("/",""));
+            intent.putExtra("data", data);
+            startActivityForResult(intent, EDIT_RESULT);
         } else {
             Log.d("TestResultActivity", "onEdit: false");
         }

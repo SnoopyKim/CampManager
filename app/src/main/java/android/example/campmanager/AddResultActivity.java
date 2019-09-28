@@ -16,6 +16,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -38,14 +39,27 @@ public class AddResultActivity extends AppCompatActivity {
 
         db = FirebaseFirestore.getInstance();
 
-        studentsList = (ArrayList<Student>)getIntent().getSerializableExtra("students");
-        date = getIntent().getStringExtra("date");
-
         etName = findViewById(R.id.et_student_name);
         etBirth = findViewById(R.id.et_student_birth);
         etEng = findViewById(R.id.et_eng_result);
         etMath = findViewById(R.id.et_math_result);
         etRemarks = findViewById(R.id.et_remarks);
+
+        Intent intent = getIntent();
+
+        studentsList = (ArrayList<Student>)intent.getSerializableExtra("students");
+        date = intent.getStringExtra("date");
+        if (intent.getAction().equals("edit")) {
+            Result data = (Result)intent.getSerializableExtra("data");
+            etName.setText(data.getName());
+            etName.setEnabled(false);
+            etBirth.setText(findBirthwithId(data.getId()));
+            etBirth.setEnabled(false);
+            etEng.setText(data.getEng());
+            etMath.setText(data.getMath());
+            etRemarks.setText(data.getRemarks());
+        }
+
 
         btnAddResult = findViewById(R.id.btn_add_result);
         btnAddResult.setOnClickListener(new View.OnClickListener() {
@@ -89,6 +103,15 @@ public class AddResultActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private String findBirthwithId(String id) {
+        for (Student student : studentsList) {
+            if (student.getId().equals(id)) {
+                return student.getAge();
+            }
+        }
+        return null;
     }
 
     private void setBackButton() {

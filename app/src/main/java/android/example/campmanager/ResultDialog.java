@@ -1,5 +1,6 @@
 package android.example.campmanager;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -22,25 +23,22 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Objects;
 
-public class ResultDialog extends DialogFragment {
+public class ResultDialog extends DialogFragment implements View.OnClickListener {
 
-    TextView tvEngResult, tvMathResult, tvRemarks, tvRemarksResult;
+    Result data;
 
-    public static ResultDialog newInstance(String name, String eng, String math, String remarks) {
+    public static ResultDialog newInstance(Result data) {
         ResultDialog dialog = new ResultDialog();
 
         Bundle args = new Bundle();
-        args.putString("name", name);
-        args.putString("eng", eng);
-        args.putString("math", math);
-        args.putString("remarks", remarks);
+        args.putSerializable("data", data);
         dialog.setArguments(args);
 
         return dialog;
     }
 
     public static interface OnEditListener {
-        public abstract void onEdit(boolean on);
+        public abstract void onEdit(Result data);
     }
 
     private OnEditListener editListener;
@@ -55,39 +53,47 @@ public class ResultDialog extends DialogFragment {
         }
     }
 
-    @Nullable
+    @NonNull
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_dialog_result, container, false);
+    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        View v = getActivity().getLayoutInflater().inflate(R.layout.fragment_dialog_result, null);
 
-        Bundle data = getArguments();
+        data = (Result)getArguments().getSerializable("data");
+        builder.setTitle(data.getName());
 
-        getDialog().setTitle(data.getString("name"));
+        TextView tvEngResult = v.findViewById(R.id.tv_eng_result);
+        tvEngResult.setText(data.getEng());
 
-        tvEngResult = v.findViewById(R.id.tv_eng_result);
-        tvEngResult.setText(data.getString("eng"));
-        tvMathResult = v.findViewById(R.id.tv_math_result);
-        tvMathResult.setText(data.getString("math"));
-        tvRemarks = v.findViewById(R.id.tv_remarks);
-        tvRemarks.setText(String.format("오늘의 %s이", data.getString("name").substring(1)));
-        tvRemarksResult = v.findViewById(R.id.tv_remarks_result);
-        tvRemarksResult.setText(data.getString("remarks"));
+        TextView tvMathResult = v.findViewById(R.id.tv_math_result);
+        tvMathResult.setText(data.getMath());
+
+        TextView tvRemarks = v.findViewById(R.id.tv_remarks);
+        tvRemarks.setText(String.format("오늘의 %s", data.getName().substring(1)));
+
+        TextView tvRemarksResult = v.findViewById(R.id.tv_remarks_result);
+        tvRemarksResult.setText(data.getRemarks());
 
         Button btnEditResult = v.findViewById(R.id.btn_edit_result);
-        btnEditResult.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                editListener.onEdit(true);
-            }
-        });
+        btnEditResult.setOnClickListener(this);
         Button btnConfirm = v.findViewById(R.id.btn_confirm_result);
-        btnConfirm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                editListener.onEdit(false);
-            }
-        });
+        btnConfirm.setOnClickListener(this);
 
-        return v;
+        builder.setView(v);
+
+        return builder.create();
     }
+
+    @Override
+    public void onClick(View v) {
+        switch(v.getId()) {
+            case R.id.btn_edit_result:
+                editListener.onEdit(data);
+                dismiss(); break;
+            case R.id.btn_confirm_result:
+                editListener.onEdit(null);
+                dismiss(); break;
+        }
+    }
+
 }
