@@ -3,10 +3,38 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="300dp"
+    android:layout_height="wrap_content"
     android:padding="20dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     tools:context=".ResultDialog">
+
+    <TextView
+        android:id="@+id/tv_student_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:textSize="24dp"
+        android:textColor="@android:color/black" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="16dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/learning_volume"
+            android:textColor="@android:color/black"
+            android:textStyle="bold"
+            android:textSize="20dp"/>
+        <EditText
+            android:id="@+id/et_volume"
+            style="@style/ResultEditText"
+            android:layout_marginStart="16dp"/>
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -15,15 +43,14 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/english"
+            android:text="@string/result"
+            android:textColor="@android:color/black"
             android:textStyle="bold"
-            android:textSize="16dp"/>
-        <TextView
-            android:id="@+id/tv_eng_result"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:textSize="16dp"/>
+            android:textSize="20dp"/>
+        <EditText
+            android:id="@+id/et_eng_result"
+            style="@style/ResultEditText"
+            android:layout_marginStart="16dp"/>
     </LinearLayout>
 
     <LinearLayout
@@ -34,43 +61,36 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/math"
+            android:textColor="@android:color/black"
             android:textStyle="bold"
-            android:textSize="16dp"/>
-        <TextView
-            android:id="@+id/tv_math_result"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:textSize="16dp"/>
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <TextView
-            android:id="@+id/tv_remarks"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textStyle="bold"
-            android:textSize="16dp"/>
-        <TextView
-            android:id="@+id/tv_remarks_result"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:textSize="16dp"/>
+            android:textSize="20dp"/>
+        <EditText
+            android:id="@+id/et_math_result"
+            style="@style/ResultEditText"
+            android:layout_marginStart="16dp"/>
     </LinearLayout>
 
-    <Button
-        android:id="@+id/btn_edit_result"
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/tv_remarks"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="@string/edit"/>
+        android:textColor="@android:color/black"
+        android:textStyle="bold"
+        android:textSize="20dp"/>
+    <EditText
+        android:id="@+id/et_remarks_result"
+        style="@style/ResultEditText"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:inputType="textMultiLine"
+        android:maxLines="7"/>
+
     <Button
         android:id="@+id/btn_confirm_result"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        style="@style/ButtonSearch"
         android:text="@string/confirm"/>
     
 </LinearLayout>

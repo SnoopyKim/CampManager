@@ -4,24 +4,26 @@ import java.io.Serializable;
 
 public class Result implements Serializable {
 
-    private String id;
+    private String path;
     private String name;
+    private String volume;
     private String eng;
     private String math;
     private String remarks;
 
     public Result() {}
 
-    public Result(String id, String name, String eng, String math, String remarks) {
-        this.id = id;
+    public Result(String path, String name, String volume, String eng, String math, String remarks) {
+        this.path = path;
         this.name = name;
+        this.volume = volume;
         this.eng = eng;
         this.math = math;
         this.remarks = remarks;
     }
 
-    public String getId() {
-        return id;
+    public String getPath() {
+        return path;
     }
 
     public String getName() {
@@ -38,5 +40,9 @@ public class Result implements Serializable {
 
     public String getRemarks() {
         return remarks;
+    }
+
+    public String getVolume() {
+        return volume;
     }
 }

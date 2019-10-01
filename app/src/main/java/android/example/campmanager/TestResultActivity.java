@@ -3,9 +3,6 @@ package android.example.campmanager;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -15,33 +12,25 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
-public class TestResultActivity extends AppCompatActivity implements ResultDialog.OnEditListener {
-
-    private final int ADD_RESULT = 10;
-    private final int EDIT_RESULT = 11;
+public class TestResultActivity extends AppCompatActivity {
 
     FirebaseFirestore db;
     ArrayList<Student> studentList;
@@ -65,30 +54,6 @@ public class TestResultActivity extends AppCompatActivity implements ResultDialo
         adapter = new ResultListAdapter(this, studentList, Glide.with(this));
         studentView.setAdapter(adapter);
         studentView.setLayoutManager(new GridLayoutManager(this, 4));
-
-        FloatingActionButton fabAddResult = findViewById(R.id.fab_add_result);
-        fabAddResult.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!studentList.isEmpty()) {
-                    Intent intent = new Intent(getApplicationContext(), AddResultActivity.class);
-                    intent.setAction("add");
-                    intent.putExtra("students",studentList);
-                    intent.putExtra("date", date.replaceAll("/",""));
-                    startActivityForResult(intent, ADD_RESULT);
-                }
-            }
-        });
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == ADD_RESULT && resultCode == RESULT_OK) {
-            Log.d("TestResultActivity", "ADD_RESULT: OK");
-        } else if(requestCode == EDIT_RESULT && resultCode == RESULT_OK) {
-            Log.d("TestResultActivity", "EDIT_RESULT: OK");
-        }
     }
 
     private void callStudentData() {
@@ -119,41 +84,48 @@ public class TestResultActivity extends AppCompatActivity implements ResultDialo
                 });
     }
 
-    public void callResultData(final String id, final String name) {
-        db.collection("students").document(id)
-          .collection("daily").document(date.replaceAll("/",""))
-                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+    public void callResultData(String id, final String name) {
+        final String path = "students/" + id + "/daily/" + date.replaceAll("/","");
+        db.document(path).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         if (task.isSuccessful() && task.getResult()!=null && task.getResult().exists()) {
+                            String volume = task.getResult().getString("volume");
                             String eng = task.getResult().getString("eng");
                             String math = task.getResult().getString("math");
                             String remarks = task.getResult().getString("remarks");
-                            showResultDialog(new Result(id, name, eng, math, remarks));
+                            showResultDialog(new Result(path, name, volume, eng, math, remarks));
+                        } else if (task.isSuccessful() && task.getResult()!=null && !task.getResult().exists()) {
+                            createResultData(path, name);
                         } else {
-                            showEmptyDialog(name);
+                            Toast.makeText(getApplicationContext(), getString(R.string.data_receive_fail), Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
+    }
+
+    public void createResultData(final String path, final String name) {
+        Map<String, String> init = new HashMap<>();
+        init.put("volume","");
+        init.put("eng", "");
+        init.put("math", "");
+        init.put("remarks", "");
+        db.document(path).set(init).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(task.isSuccessful()) {
+                    showResultDialog(new Result(path, name, "", "", "", ""));
+                } else {
+                    Toast.makeText(getApplicationContext(), getString(R.string.create_result_data_failed), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     public void showResultDialog(Result result) {
         ResultDialog resultDialog = ResultDialog.newInstance(result);
         resultDialog.setCancelable(false);
         resultDialog.show(getSupportFragmentManager(), "dialog");
-    }
-
-    public void showEmptyDialog(String name) {
-        Dialog dialog = new AlertDialog.Builder(this)
-                .setTitle(name)
-                .setMessage("저장된 데이터가 없습니다.")
-                .setPositiveButton(getString(R.string.confirm), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                }).create();
-        dialog.show();
     }
 
     private void setBackButton() {
@@ -167,17 +139,12 @@ public class TestResultActivity extends AppCompatActivity implements ResultDialo
     }
 
     @Override
-    public void onEdit(Result data) {
-        if (data != null) {
-            Log.d("TestResultActivity", "onEdit: true");
-            Intent intent = new Intent(getApplicationContext(), AddResultActivity.class);
-            intent.setAction("edit");
-            intent.putExtra("students",studentList);
-            intent.putExtra("date", date.replaceAll("/",""));
-            intent.putExtra("data", data);
-            startActivityForResult(intent, EDIT_RESULT);
+    public void onBackPressed() {
+        ResultDialog rd = (ResultDialog)getSupportFragmentManager().findFragmentByTag("dialog");
+        if (rd != null && rd.getDialog().isShowing()) {
+            rd.dismiss();
         } else {
-            Log.d("TestResultActivity", "onEdit: false");
+            super.onBackPressed();
         }
     }
 }
