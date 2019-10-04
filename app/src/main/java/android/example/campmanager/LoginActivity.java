@@ -140,7 +140,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
+                if (task.isSuccessful() && task.getResult()!=null) {
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    intent.putExtra("ID", task.getResult().getDocuments().get(0).getId());
+                    startActivity(intent);
                     // 확인 팝업
                 } else {
                     Toast.makeText(getApplicationContext(), "해당 학생을 찾을 수가 없습니다.",Toast.LENGTH_SHORT).show();

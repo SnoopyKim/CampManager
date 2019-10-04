@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,7 +37,7 @@ public class ProfileFragment extends Fragment {
     FirebaseFirestore db;
 
     ImageView ivProfile;
-    TextView tvUserName, tvUserType, tvUserEmail;
+    TextView tvUserName, tvUserType, tvUserEmail, tvStudentBirth;
 
     public RequestManager glideRequestManager;
 
@@ -63,13 +64,22 @@ public class ProfileFragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_profile, container, false);
 
+        final String mode = getArguments().getString("mode");
+        String id = getArguments().getString("id");
+
         ivProfile = v.findViewById(R.id.iv_user_image);
         tvUserName =  v.findViewById(R.id.tv_user_name);
         tvUserType = v.findViewById(R.id.tv_user_mode);
         tvUserEmail = v.findViewById(R.id.tv_user_email);
+        tvStudentBirth = v.findViewById(R.id.tv_student_birth);
 
-        final String mode = getArguments().getString("mode");
-        String id = getArguments().getString("id");
+        if (mode.equals("teachers")) {
+            LinearLayout llUserBirth = v.findViewById(R.id.ll_student_birth);
+            llUserBirth.setVisibility(View.GONE);
+        } else {
+            LinearLayout llUserEmail = v.findViewById(R.id.ll_user_email);
+            llUserEmail.setVisibility(View.GONE);
+        }
 
         setUserData(mode, id);
 
@@ -101,22 +111,25 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful() && task.getResult()!=null && task.getResult().exists()) {
+                    String stUserProfile = task.getResult().get("photo").toString();
+                    String stUserName = task.getResult().get("name").toString();
+
+                    drawImage(stUserProfile);
+                    tvUserName.setText(stUserName);
                     if (mode.equals("teachers")) {
                         // when user is teacher
-                        String stUserProfile = task.getResult().get("photo").toString();
-                        String stUserName = task.getResult().get("name").toString();
                         String stUserEmail = task.getResult().get("email").toString();
 
-                        if (getActivity()!=null) {
-                            drawImage(stUserProfile);
-                            tvUserName.setText(stUserName);
-                            tvUserType.setText(getString(R.string.teacher));
-                            tvUserEmail.setText(stUserEmail);
-                        }
+                        tvUserType.setText(getString(R.string.teacher));
+                        tvUserEmail.setText(stUserEmail);
                     } else {
                         // when user is parent or student.
+                        String stUserBirth = task.getResult().get("birth").toString();
 
+                        tvUserType.setText(getString(R.string.student));
+                        tvStudentBirth.setText(stUserBirth);
                     }
+
                 } else {
                     Toast.makeText(getActivity(), getString(R.string.data_receive_fail), Toast.LENGTH_SHORT).show();
                 }

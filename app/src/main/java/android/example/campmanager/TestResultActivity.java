@@ -138,13 +138,4 @@ public class TestResultActivity extends AppCompatActivity {
         });
     }
 
-    @Override
-    public void onBackPressed() {
-        ResultDialog rd = (ResultDialog)getSupportFragmentManager().findFragmentByTag("dialog");
-        if (rd != null && rd.getDialog().isShowing()) {
-            rd.dismiss();
-        } else {
-            super.onBackPressed();
-        }
-    }
 }
