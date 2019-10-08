@@ -112,12 +112,19 @@
         app:layout_constraintStart_toStartOf="@id/iv_user_image"
         app:layout_constraintEnd_toEndOf="@id/iv_user_image"
         app:layout_constraintTop_toBottomOf="@+id/ll_user_detail"
-        >
+        android:layout_marginTop="16dp"
+        android:orientation="vertical">
+        <Button
+            android:id="@+id/btn_show_result"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/ButtonSearch"
+            android:text="데일리 성적 보기"/>
         <Button
             android:id="@+id/btn_logout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
             style="@style/ButtonSearch"
             android:text="@string/logout"/>
     </LinearLayout>

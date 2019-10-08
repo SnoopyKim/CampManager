@@ -1,5 +1,6 @@
 package android.example.campmanager;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -54,11 +56,11 @@ public class MainActivity extends AppCompatActivity {
 
         user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
-            Toast.makeText(getApplicationContext(), "선생님 로그인", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getApplicationContext(), "선생님 로그인", Toast.LENGTH_SHORT).show();
             mode = "teachers";
             id = user.getUid();
         } else {
-            Toast.makeText(getApplicationContext(), "부모님 로그인", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getApplicationContext(), "부모님 로그인", Toast.LENGTH_SHORT).show();
             mode = "students";
             id = getIntent().getStringExtra("ID");
         }
@@ -140,5 +142,30 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
+    }
+
+
+    @Override
+    public void onBackPressed() { //display Asking Exit Dialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setCancelable(false)
+                .setTitle(getString(R.string.exit))
+                .setMessage(getString(R.string.exit_message))
+                .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finishAffinity();
+                        System.runFinalization();
+                        System.exit(0);
+                    }
+                })
+                .setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+
+        builder.create().show();
     }
 }

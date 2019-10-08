@@ -2,7 +2,6 @@ package android.example.campmanager;
 
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -65,21 +64,13 @@ public class ProfileFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_profile, container, false);
 
         final String mode = getArguments().getString("mode");
-        String id = getArguments().getString("id");
+        final String id = getArguments().getString("id");
 
         ivProfile = v.findViewById(R.id.iv_user_image);
         tvUserName =  v.findViewById(R.id.tv_user_name);
         tvUserType = v.findViewById(R.id.tv_user_mode);
         tvUserEmail = v.findViewById(R.id.tv_user_email);
         tvStudentBirth = v.findViewById(R.id.tv_student_birth);
-
-        if (mode.equals("teachers")) {
-            LinearLayout llUserBirth = v.findViewById(R.id.ll_student_birth);
-            llUserBirth.setVisibility(View.GONE);
-        } else {
-            LinearLayout llUserEmail = v.findViewById(R.id.ll_user_email);
-            llUserEmail.setVisibility(View.GONE);
-        }
 
         setUserData(mode, id);
 
@@ -95,10 +86,31 @@ public class ProfileFragment extends Fragment {
         btnLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FirebaseAuth.getInstance().signOut();
+                if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+                    FirebaseAuth.getInstance().signOut();
+                }
                 getActivity().finish();
             }
         });
+
+        Button btnShowResult = v.findViewById(R.id.btn_show_result);
+        btnShowResult.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), RecordActivity.class);
+                intent.putExtra("ID", id);
+                startActivity(intent);
+            }
+        });
+
+        if (mode.equals("teachers")) {
+            LinearLayout llUserBirth = v.findViewById(R.id.ll_student_birth);
+            llUserBirth.setVisibility(View.GONE);
+            btnShowResult.setVisibility(View.GONE);
+        } else {
+            LinearLayout llUserEmail = v.findViewById(R.id.ll_user_email);
+            llUserEmail.setVisibility(View.GONE);
+        }
 
         return v;
     }

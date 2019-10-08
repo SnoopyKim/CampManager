@@ -89,7 +89,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         switch(v.getId()) {
             case R.id.btnSearchStudent:
                 String stStudentName = etStudentName.getText().toString();
-                int birth = Integer.parseInt(etBirth.getText().toString());
+                String birth = etBirth.getText().toString();
 
                 searchStudent(stStudentName, birth);
                 break;
@@ -135,12 +135,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
-    public void searchStudent(String name, int birth) {
+    public void searchStudent(String name, String birth) {
         db.collection("students").whereEqualTo("name", name).whereEqualTo("birth", birth)
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful() && task.getResult()!=null) {
+                if (task.isSuccessful() && !task.getResult().getDocuments().isEmpty()) {
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     intent.putExtra("ID", task.getResult().getDocuments().get(0).getId());
                     startActivity(intent);

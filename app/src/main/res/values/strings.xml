@@ -53,5 +53,10 @@
     <string name="create_result_data_failed">초기 데이터 생성 실패</string>
     <string name="empty">입력해주세요</string>
     <string name="student">학생</string>
+    <string name="exit">종료하기</string>
+    <string name="exit_message">종료하시겠습니까?</string>
+    <string name="ok">네</string>
+    <string name="no">아니요</string>
+    <string name="remarks">한줄평</string>
 
 </resources>
