@@ -32,16 +32,8 @@ public class Student implements Serializable {
         return age;
     }
 
-    public void setAge(String age) {
-        this.age = age;
-    }
-
     public String getPhoto() {
         return photo;
-    }
-
-    public void setPhoto(String photo) {
-        this.photo = photo;
     }
 
     public String getId() {

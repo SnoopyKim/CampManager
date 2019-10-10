@@ -58,5 +58,6 @@
     <string name="ok">네</string>
     <string name="no">아니요</string>
     <string name="remarks">한줄평</string>
+    <string name="hint_no_info">아직 정보가 없습니다</string>
 
 </resources>

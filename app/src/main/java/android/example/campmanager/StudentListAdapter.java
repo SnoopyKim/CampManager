@@ -79,7 +79,7 @@ public class StudentListAdapter extends RecyclerView.Adapter<StudentListAdapter.
         public void onClick(View v) {
             int position = getLayoutPosition();
             Intent intent = new Intent(mInflater.getContext(), StudentActivity.class);
-            intent.putExtra("ID", mStudents.get(position).getId());
+            intent.putExtra("data", mStudents.get(position));
             activity.startActivityForResult(intent, MainActivity.STUDENT_DETAIL_CODE);
         }
     }

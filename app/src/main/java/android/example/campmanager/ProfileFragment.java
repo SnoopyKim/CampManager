@@ -122,7 +122,7 @@ public class ProfileFragment extends Fragment {
                 .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful() && task.getResult()!=null && task.getResult().exists()) {
+                if (task.isSuccessful() && task.getResult()!=null && task.getResult().exists() && isVisible()) {
                     String stUserProfile = task.getResult().get("photo").toString();
                     String stUserName = task.getResult().get("name").toString();
 
@@ -149,7 +149,8 @@ public class ProfileFragment extends Fragment {
         });
     }
 
-    private void selectImage() {
+
+    void selectImage() {
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
         if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
@@ -157,7 +158,7 @@ public class ProfileFragment extends Fragment {
         }
     }
 
-    public void drawImage(final String url) {
+    void drawImage(final String url) {
         Log.d("ProfileChangeProcess", "drawImage: " + url);
         ivProfile.post(new Runnable() {
             @Override

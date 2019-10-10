@@ -111,7 +111,7 @@ public class ResultDialog extends DialogFragment {
         btnConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+                if (MainActivity.user != null) {
                     editResultData();
                 } else {
                     dismiss();
@@ -120,11 +120,16 @@ public class ResultDialog extends DialogFragment {
         });
 
         // 학생 or 부모 사용자일 경우
-        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+        if (MainActivity.user == null) {
             etVolume.setEnabled(false);
             etEngResult.setEnabled(false);
             etMathResult.setEnabled(false);
             etRemarksResult.setEnabled(false);
+
+            if (etVolume.getText().toString().equals("")) { etVolume.setHint(getString(R.string.hint_no_info)); }
+            if (etEngResult.getText().toString().equals("")) { etEngResult.setHint(getString(R.string.hint_no_info)); }
+            if (etMathResult.getText().toString().equals("")) { etMathResult.setHint(getString(R.string.hint_no_info)); }
+            if (etRemarksResult.getText().toString().equals("")) { etRemarksResult.setHint(getString(R.string.hint_no_info)); }
         }
     }
 

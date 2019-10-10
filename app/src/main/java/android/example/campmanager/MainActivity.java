@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
     public static final int STUDENT_DETAIL_CODE = 4;
     public static final int DAILY_RESULT_CODE = 5;
 
-    FirebaseUser user;
+    public static FirebaseUser user;
 
     BottomNavigationView navView;
 
@@ -144,7 +144,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
     @Override
     public void onBackPressed() { //display Asking Exit Dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -168,4 +167,5 @@ public class MainActivity extends AppCompatActivity {
 
         builder.create().show();
     }
+
 }

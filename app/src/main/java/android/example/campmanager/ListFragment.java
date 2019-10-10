@@ -82,6 +82,8 @@ public class ListFragment extends Fragment {
                 getActivity().startActivityForResult(intent, MainActivity.ADD_STUDENT_CODE);
             }
         });
+        if (MainActivity.user != null) { fabAddStudent.show(); }
+        else { fabAddStudent.hide(); }
 
         return v;
     }
