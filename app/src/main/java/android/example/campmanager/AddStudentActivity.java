@@ -39,6 +39,8 @@ public class AddStudentActivity extends AppCompatActivity {
 
     Uri profileUri = null;
 
+    LoadingDialog dialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,6 +49,8 @@ public class AddStudentActivity extends AppCompatActivity {
 
         db = FirebaseFirestore.getInstance();
         studentRef = FirebaseStorage.getInstance().getReference();
+
+        dialog = new LoadingDialog(this);
 
         etStudentName = findViewById(R.id.et_student_name);
         etStudentBirth = findViewById(R.id.et_student_birth);
@@ -68,6 +72,7 @@ public class AddStudentActivity extends AppCompatActivity {
                 if(stName.equals("") || stBirth.equals("")) {
                     Toast.makeText(getApplicationContext(), getString(R.string.check_inputs), Toast.LENGTH_SHORT).show();
                 } else {
+                    dialog.show();
                     addStudent(stName, stBirth);
                 }
             }
@@ -100,7 +105,6 @@ public class AddStudentActivity extends AppCompatActivity {
     }
 
     private void addStudent(String name, String birth) {
-
         Map<String, String> student = new HashMap<>();
         student.put("name", name);
         student.put("birth", birth);
@@ -117,6 +121,7 @@ public class AddStudentActivity extends AppCompatActivity {
                                 uploadStudentDefaultImage(studentRef, task.getResult());
                             }
                         } else {
+                            dialog.dismiss();
                             setResult(RESULT_CANCELED);
                             finish();
                         }
@@ -144,6 +149,7 @@ public class AddStudentActivity extends AppCompatActivity {
                         dRef.update("photo", "");
                         setResult(RESULT_CANCELED);
                     }
+                    dialog.dismiss();
                     finish();
                 }
             });
@@ -160,6 +166,7 @@ public class AddStudentActivity extends AppCompatActivity {
                     dRef.update("photo", "");
                     setResult(RESULT_CANCELED);
                 }
+                dialog.dismiss();
                 finish();
             }
         });

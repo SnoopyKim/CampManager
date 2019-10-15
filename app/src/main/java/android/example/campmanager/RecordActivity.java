@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -25,6 +26,8 @@ public class RecordActivity extends AppCompatActivity {
     RecordAdapter recordAdapter;
     ArrayList<Record> recordList;
 
+    LoadingDialog dialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,10 +40,13 @@ public class RecordActivity extends AppCompatActivity {
         rvRecords.setAdapter(recordAdapter);
         rvRecords.setLayoutManager(new LinearLayoutManager(this));
 
+        dialog = new LoadingDialog(this);
+
         setRecordData();
     }
 
     private void setRecordData() {
+        dialog.show();
         FirebaseFirestore.getInstance().collection("students")
                 .document(getIntent().getStringExtra("ID")).collection("daily")
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -57,7 +63,10 @@ public class RecordActivity extends AppCompatActivity {
                     }
                     Collections.reverse(recordList);
                     recordAdapter.notifyDataSetChanged();
+                } else {
+                    Toast.makeText(getApplicationContext(), getString(R.string.data_receive_fail), Toast.LENGTH_LONG).show();
                 }
+                dialog.dismiss();
             }
         });
     }

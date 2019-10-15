@@ -43,6 +43,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     EditText etStudentName, etBirth, etEmail, etPassword;
     Button btnSearch, btnLogin, btnChangeForm, btnRegister;
 
+    LoadingDialog dialog;
+
     boolean switch_login = true;
 
     @Override
@@ -71,6 +73,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         btnRegister = findViewById(R.id.btnRegister);
         btnRegister.setOnClickListener(this);
 
+        dialog = new LoadingDialog(this);
+
     }
 
     @Override
@@ -90,13 +94,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             case R.id.btnSearchStudent:
                 String stStudentName = etStudentName.getText().toString();
                 String birth = etBirth.getText().toString();
-
+                dialog.show();
                 searchStudent(stStudentName, birth);
                 break;
             case R.id.btnLogin:
                 String stEmail = etEmail.getText().toString();
                 String stPassword = etPassword.getText().toString();
-
+                dialog.show();
                 loginTeacher(stEmail, stPassword);
                 break;
             case R.id.btnChangeForm:
@@ -148,6 +152,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 } else {
                     Toast.makeText(getApplicationContext(), "해당 학생을 찾을 수가 없습니다.",Toast.LENGTH_SHORT).show();
                 }
+                dialog.dismiss();
             }
         });
     }
@@ -161,6 +166,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     startActivity(intent);
                 } else {
                 }
+                dialog.dismiss();
             }
         });
     }

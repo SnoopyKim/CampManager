@@ -46,6 +46,8 @@ public class MainActivity extends AppCompatActivity {
 
     String mode, id;
 
+    LoadingDialog dialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,6 +55,8 @@ public class MainActivity extends AppCompatActivity {
 
         navView = findViewById(R.id.nav_view);
         navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
+        dialog = new LoadingDialog(this);
 
         user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
@@ -117,6 +121,7 @@ public class MainActivity extends AppCompatActivity {
 
         } else if (requestCode == AddStudentActivity.GET_IMAGE_CODE && resultCode == RESULT_OK && data != null) {
             Log.d("MainActivityResult", "GET_IMAGE_CODE: OK");
+            dialog.show();
             //Bitmap thumbnail = data.getParcelableExtra("data");
             Uri profileUri = data.getData();
             // Do work with photo saved at fullPhotoUri
@@ -139,6 +144,7 @@ public class MainActivity extends AppCompatActivity {
                     } else {
                         Toast.makeText(getApplicationContext(), getString(R.string.profile_upload_failure), Toast.LENGTH_SHORT).show();
                     }
+                    dialog.dismiss();
                 }
             });
         }

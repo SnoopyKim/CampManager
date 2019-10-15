@@ -36,8 +36,11 @@ public class ListFragment extends Fragment {
     public StudentListAdapter adapter;
     private ArrayList<Student> studentList;
 
+    LoadingDialog dialog;
+
     public ListFragment() {
         // Call students data
+
         db = FirebaseFirestore.getInstance();
         db.collection("students")
                 .get()
@@ -59,6 +62,7 @@ public class ListFragment extends Fragment {
                             Toast.makeText(getActivity(),getString(R.string.data_receive_fail), Toast.LENGTH_SHORT).show();
                             Log.d(getClass().getName(), getString(R.string.data_receive_fail));
                         }
+                        dialog.dismiss();
                     }
                 });
 
@@ -68,6 +72,9 @@ public class ListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_list, container, false);
+
+        dialog = new LoadingDialog(getActivity());
+        dialog.show();
 
         studentListView = v.findViewById(R.id.rv_student);
         adapter = new StudentListAdapter(getActivity(), studentList, Glide.with(getActivity()));

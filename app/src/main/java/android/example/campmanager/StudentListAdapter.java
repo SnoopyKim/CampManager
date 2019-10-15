@@ -47,7 +47,7 @@ public class StudentListAdapter extends RecyclerView.Adapter<StudentListAdapter.
 
         int current = Calendar.getInstance().get(Calendar.YEAR);
         int birthYear = Integer.parseInt(student.getAge().substring(0,4));
-        holder.tvAge.setText(current-birthYear + "세");
+        holder.tvAge.setText((current-birthYear+1) + "세");
 
         glideRequestManager
             .load(student.getPhoto())

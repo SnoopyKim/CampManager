@@ -38,6 +38,8 @@ public class TestResultActivity extends AppCompatActivity {
 
     String date;
 
+    LoadingDialog dialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +50,8 @@ public class TestResultActivity extends AppCompatActivity {
         ((TextView)findViewById(R.id.tv_result_date)).setText(date);
         // Call students data
         db = FirebaseFirestore.getInstance();
+        dialog = new LoadingDialog(this);
+
         callStudentData();
 
         RecyclerView studentView = findViewById(R.id.rv_student_grid);
@@ -57,6 +61,8 @@ public class TestResultActivity extends AppCompatActivity {
     }
 
     private void callStudentData() {
+        dialog.show();
+
         studentList = new ArrayList<>();
 
         db.collection("students")
@@ -80,11 +86,13 @@ public class TestResultActivity extends AppCompatActivity {
                             Toast.makeText(getApplicationContext(),getString(R.string.data_receive_fail), Toast.LENGTH_SHORT).show();
                             Log.d(getClass().getName(), getString(R.string.data_receive_fail));
                         }
+                        dialog.dismiss();
                     }
                 });
     }
 
     public void callResultData(String id, final String name) {
+        dialog.show();
         final String path = "students/" + id + "/daily/" + date.replaceAll("/","");
         db.document(path).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
@@ -94,10 +102,13 @@ public class TestResultActivity extends AppCompatActivity {
                             String eng = task.getResult().getString("eng");
                             String math = task.getResult().getString("math");
                             String remarks = task.getResult().getString("remarks");
+
+                            dialog.dismiss();
                             showResultDialog(new Result(path, name, volume, eng, math, remarks));
                         } else if (task.isSuccessful() && task.getResult()!=null && !task.getResult().exists()) {
                             createResultData(path, name);
                         } else {
+                            dialog.dismiss();
                             Toast.makeText(getApplicationContext(), getString(R.string.data_receive_fail), Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -114,6 +125,7 @@ public class TestResultActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if(task.isSuccessful()) {
+                    dialog.dismiss();
                     showResultDialog(new Result(path, name, "", "", "", ""));
                 } else {
                     Toast.makeText(getApplicationContext(), getString(R.string.create_result_data_failed), Toast.LENGTH_SHORT).show();

@@ -134,6 +134,9 @@ public class ResultDialog extends DialogFragment {
     }
 
     private void editResultData() {
+        final LoadingDialog dialog = new LoadingDialog(getActivity());
+        dialog.show();
+
         Map<String, String> result = new HashMap<>();
         result.put("volume", etVolume.getText().toString());
         result.put("eng", etEngResult.getText().toString());
@@ -150,6 +153,7 @@ public class ResultDialog extends DialogFragment {
                 } else {
                     Toast.makeText(getActivity(),"업로드 실패",Toast.LENGTH_SHORT).show();
                 }
+                dialog.dismiss();
             }
         });
     }

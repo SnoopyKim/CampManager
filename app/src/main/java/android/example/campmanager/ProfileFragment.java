@@ -40,6 +40,8 @@ public class ProfileFragment extends Fragment {
 
     public RequestManager glideRequestManager;
 
+    LoadingDialog dialog;
+
     public static ProfileFragment newInstance(final String mode, String id) {
         ProfileFragment pf = new ProfileFragment();
         Bundle bundle = new Bundle();
@@ -56,6 +58,7 @@ public class ProfileFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         glideRequestManager = Glide.with(getActivity());
+        dialog = new LoadingDialog(getActivity());
     }
 
     @Override
@@ -117,6 +120,7 @@ public class ProfileFragment extends Fragment {
 
     void setUserData(final String mode, String id) {
         Log.d(getTag(), "setUserData: id: " + id);
+        dialog.show();
         db = FirebaseFirestore.getInstance();
         db.collection(mode).document(id)
                 .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -145,6 +149,7 @@ public class ProfileFragment extends Fragment {
                 } else {
                     Toast.makeText(getActivity(), getString(R.string.data_receive_fail), Toast.LENGTH_SHORT).show();
                 }
+                dialog.dismiss();
             }
         });
     }

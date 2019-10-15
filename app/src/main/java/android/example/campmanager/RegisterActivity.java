@@ -36,6 +36,8 @@ public class RegisterActivity extends AppCompatActivity {
     EditText etEmail, etPassword, etConfirm, etName;
     Button btnRegister;
 
+    LoadingDialog dialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +46,8 @@ public class RegisterActivity extends AppCompatActivity {
 
         auth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
+
+        dialog = new LoadingDialog(this);
 
         etEmail = findViewById(R.id.etEmail);
         etPassword = findViewById(R.id.etPassword);
@@ -54,6 +58,7 @@ public class RegisterActivity extends AppCompatActivity {
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                dialog.show();
                 final String stEmail = etEmail.getText().toString();
                 String stPassword = etPassword.getText().toString();
                 String stConfirm = etConfirm.getText().toString();
@@ -75,11 +80,14 @@ public class RegisterActivity extends AppCompatActivity {
                                                 user.updateProfile(request);
 
                                                 addTeacherData(user.getUid(), stName, stEmail, task.getResult().toString());
+                                            } else {
+                                                dialog.dismiss();
                                             }
                                         }
                                     });
 
                                 } else {
+                                    dialog.dismiss();
                                     // If sign in fails, display a message to the user.
                                     Toast.makeText(getApplicationContext(), "Authentication failed.",
                                             Toast.LENGTH_SHORT).show();
@@ -109,6 +117,7 @@ public class RegisterActivity extends AppCompatActivity {
                         } else {
                             setResult(RESULT_CANCELED);
                         }
+                        dialog.dismiss();
                         finish();
                     }
                 });

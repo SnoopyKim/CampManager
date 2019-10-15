@@ -36,6 +36,8 @@ public class StudentActivity extends AppCompatActivity {
 
     Student studentData;
 
+    LoadingDialog dialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,14 +46,17 @@ public class StudentActivity extends AppCompatActivity {
 
         db = FirebaseFirestore.getInstance();
 
-        ivStudentProfile = findViewById(R.id.iv_student_image);
-        tvStudentName = findViewById(R.id.tv_student_name);
-        tvStudentBirth = findViewById(R.id.tv_student_birth);
+        dialog = new LoadingDialog(this);
 
         studentData = (Student)getIntent().getSerializableExtra("data");
 
+        tvStudentName = findViewById(R.id.tv_student_name);
         tvStudentName.setText(studentData.getName());
+
+        tvStudentBirth = findViewById(R.id.tv_student_birth);
         tvStudentBirth.setText(studentData.getAge());
+
+        ivStudentProfile = findViewById(R.id.iv_student_image);
         Glide
                 .with(getApplicationContext())
                 .load(studentData.getPhoto())
@@ -76,6 +81,7 @@ public class StudentActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == AddStudentActivity.GET_IMAGE_CODE && resultCode == RESULT_OK && data != null) {
+            dialog.show();
             final StorageReference storageReference = FirebaseStorage.getInstance().getReference("students").child(studentData.getId());
             storageReference.putFile(data.getData())
                     .continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
@@ -94,6 +100,7 @@ public class StudentActivity extends AppCompatActivity {
                     } else {
                         Toast.makeText(getApplicationContext(), getString(R.string.profile_upload_failure), Toast.LENGTH_SHORT).show();
                     }
+                    dialog.dismiss();
                 }
             });
 
