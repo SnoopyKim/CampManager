@@ -64,8 +64,8 @@ public class StudentActivity extends AppCompatActivity {
                 .placeholder(R.drawable.default_profile)
                 .into(ivStudentProfile);
 
-        Button btn = findViewById(R.id.btn_change_profile);
-        btn.setOnClickListener(new View.OnClickListener() {
+        Button btnChageProfile = findViewById(R.id.btn_change_profile);
+        btnChageProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Intent.ACTION_PICK);
@@ -75,6 +75,21 @@ public class StudentActivity extends AppCompatActivity {
                 }
             }
         });
+
+        Button btnShowResult = findViewById(R.id.btn_show_result);
+        btnShowResult.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(StudentActivity.this, RecordActivity.class);
+                intent.putExtra("ID", studentData.getId());
+                startActivity(intent);
+            }
+        });
+
+        if (MainActivity.user == null) {
+            btnChageProfile.setVisibility(View.GONE);
+            btnShowResult.setVisibility(View.GONE);
+        }
     }
 
     @Override

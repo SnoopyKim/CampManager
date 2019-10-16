@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -28,11 +29,15 @@ public class RecordActivity extends AppCompatActivity {
 
     LoadingDialog dialog;
 
+    TextView tvEmptyList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_record);
         setBackButton();
+
+        tvEmptyList = findViewById(R.id.tv_empty_list);
 
         RecyclerView rvRecords = findViewById(R.id.rv_records);
         recordList = new ArrayList<>();
@@ -63,8 +68,15 @@ public class RecordActivity extends AppCompatActivity {
                     }
                     Collections.reverse(recordList);
                     recordAdapter.notifyDataSetChanged();
+
+                    if (task.getResult().isEmpty()) {
+                        tvEmptyList.setText("데이터가 아직 없습니다.");
+                        tvEmptyList.setVisibility(View.VISIBLE);
+                    }
                 } else {
                     Toast.makeText(getApplicationContext(), getString(R.string.data_receive_fail), Toast.LENGTH_LONG).show();
+                    tvEmptyList.setText("데이터를 불러오는데 문제가 생겼습니다\n다시 시도해주세요.");
+                    tvEmptyList.setVisibility(View.VISIBLE);
                 }
                 dialog.dismiss();
             }

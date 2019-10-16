@@ -22,7 +22,7 @@ public class RecordAdapter extends RecyclerView.Adapter<RecordAdapter.RecordView
         this.records = records;
     }
 
-    public class RecordViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class RecordViewHolder extends RecyclerView.ViewHolder{
 
         private TextView tvDate, tvVolume, tvEng, tvMath, tvRemarks;
 
@@ -34,23 +34,22 @@ public class RecordAdapter extends RecyclerView.Adapter<RecordAdapter.RecordView
             tvEng = itemView.findViewById(R.id.tv_record_eng);
             tvMath = itemView.findViewById(R.id.tv_record_math);
             tvRemarks = itemView.findViewById(R.id.tv_record_remarks);
-            itemView.setOnClickListener(this);
         }
 
         void bindData(Record data) {
             String year = data.getDate().substring(2,4);
             String month = data.getDate().substring(4,6);
             String day = data.getDate().substring(6);
-            tvDate.setText(String.format("%s-%s-%s", year, month, day));
-            tvVolume.setText(data.getVolume());
-            tvEng.setText(data.getEng());
-            tvMath.setText(data.getMath());
-            tvRemarks.setText(data.getRemarks());
+            setTextView(tvDate, String.format("%s-%s-%s", year, month, day));
+            setTextView(tvVolume, data.getVolume());
+            setTextView(tvEng, data.getEng());
+            setTextView(tvMath, data.getMath());
+            setTextView(tvRemarks, data.getRemarks());
         }
 
-        @Override
-        public void onClick(View v) {
-            int position = getLayoutPosition();
+        void setTextView(TextView tv, String string) {
+            if (string.equals("")) { tv.setText(context.getString(R.string.hint_no_info)); }
+            else { tv.setText(string); }
         }
     }
 

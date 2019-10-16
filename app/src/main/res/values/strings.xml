@@ -59,5 +59,6 @@
     <string name="no">아니요</string>
     <string name="remarks">한줄평</string>
     <string name="hint_no_info">아직 정보가 없습니다</string>
+    <string name="show_daily_result">데일리 성적 보기</string>
 
 </resources>

@@ -38,9 +38,38 @@ public class ListFragment extends Fragment {
 
     LoadingDialog dialog;
 
-    public ListFragment() {
-        // Call students data
+    public ListFragment() { }
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.fragment_list, container, false);
+
+        dialog = new LoadingDialog(getActivity());
+        dialog.show();
+
+        callStudentData();
+
+        studentListView = v.findViewById(R.id.rv_student);
+        adapter = new StudentListAdapter(getActivity(), studentList, Glide.with(getActivity()));
+        studentListView.setAdapter(adapter);
+        studentListView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        FloatingActionButton fabAddStudent = v.findViewById(R.id.fab_add_student);
+        fabAddStudent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), AddStudentActivity.class);
+                getActivity().startActivityForResult(intent, MainActivity.ADD_STUDENT_CODE);
+            }
+        });
+        if (MainActivity.user != null) { fabAddStudent.show(); }
+        else { fabAddStudent.hide(); }
+
+        return v;
+    }
+
+    void callStudentData() {
+        // Call students data
         db = FirebaseFirestore.getInstance();
         db.collection("students")
                 .get()
@@ -67,32 +96,6 @@ public class ListFragment extends Fragment {
                 });
 
         studentList = new ArrayList<>();
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_list, container, false);
-
-        dialog = new LoadingDialog(getActivity());
-        dialog.show();
-
-        studentListView = v.findViewById(R.id.rv_student);
-        adapter = new StudentListAdapter(getActivity(), studentList, Glide.with(getActivity()));
-        studentListView.setAdapter(adapter);
-        studentListView.setLayoutManager(new LinearLayoutManager(getContext()));
-
-        FloatingActionButton fabAddStudent = v.findViewById(R.id.fab_add_student);
-        fabAddStudent.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), AddStudentActivity.class);
-                getActivity().startActivityForResult(intent, MainActivity.ADD_STUDENT_CODE);
-            }
-        });
-        if (MainActivity.user != null) { fabAddStudent.show(); }
-        else { fabAddStudent.hide(); }
-
-        return v;
     }
 
 }
