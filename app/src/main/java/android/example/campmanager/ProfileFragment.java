@@ -36,7 +36,7 @@ public class ProfileFragment extends Fragment {
     FirebaseFirestore db;
 
     ImageView ivProfile;
-    TextView tvUserName, tvUserType, tvUserEmail, tvStudentBirth;
+    TextView tvUserName, tvUserType, tvUserEmail, tvStudentBirth, tvStudentTeacher;
 
     public RequestManager glideRequestManager;
 
@@ -74,6 +74,7 @@ public class ProfileFragment extends Fragment {
         tvUserType = v.findViewById(R.id.tv_user_mode);
         tvUserEmail = v.findViewById(R.id.tv_user_email);
         tvStudentBirth = v.findViewById(R.id.tv_student_birth);
+        tvStudentTeacher = v.findViewById(R.id.tv_student_teacher);
 
         setUserData(mode, id);
 
@@ -109,6 +110,8 @@ public class ProfileFragment extends Fragment {
         if (mode.equals("teachers")) {
             LinearLayout llUserBirth = v.findViewById(R.id.ll_student_birth);
             llUserBirth.setVisibility(View.GONE);
+            LinearLayout llStudentTeacher = v.findViewById(R.id.ll_student_teacher);
+            llStudentTeacher.setVisibility(View.GONE);
             btnShowResult.setVisibility(View.GONE);
         } else {
             LinearLayout llUserEmail = v.findViewById(R.id.ll_user_email);
@@ -141,9 +144,11 @@ public class ProfileFragment extends Fragment {
                     } else {
                         // when user is parent or student.
                         String stUserBirth = task.getResult().get("birth").toString();
+                        String stStudentTeacher = task.getResult().get("teacher").toString();
 
                         tvUserType.setText(getString(R.string.student));
                         tvStudentBirth.setText(stUserBirth);
+                        tvStudentTeacher.setText(stStudentTeacher);
                     }
 
                 } else {

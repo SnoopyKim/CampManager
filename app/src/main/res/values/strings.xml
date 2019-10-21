@@ -60,5 +60,7 @@
     <string name="remarks">한줄평</string>
     <string name="hint_no_info">아직 정보가 없습니다</string>
     <string name="show_daily_result">데일리 성적 보기</string>
+    <string name="student_teacher">담당선생님</string>
+    <string name="teacher_student">담당 학생</string>
 
 </resources>

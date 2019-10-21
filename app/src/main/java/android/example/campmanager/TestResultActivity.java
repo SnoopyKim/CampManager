@@ -13,7 +13,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ImageButton;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,6 +28,8 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -54,6 +59,22 @@ public class TestResultActivity extends AppCompatActivity {
 
         callStudentData();
 
+        Switch switchFIlter = findViewById(R.id.btn_filter_student);
+        TextView tvTeacherStudent = findViewById(R.id.tv_teacher_student);
+        if (MainActivity.user != null) {
+            switchFIlter.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if(isChecked) { adapter.getFilter().filter(MainActivity.user.getDisplayName()); }
+                    else { adapter.getFilter().filter(""); }
+                }
+            });
+        } else {
+            tvTeacherStudent.setVisibility(View.INVISIBLE);
+            switchFIlter.setVisibility(View.INVISIBLE);
+            switchFIlter.setEnabled(false);
+        }
+
         RecyclerView studentView = findViewById(R.id.rv_student_grid);
         adapter = new ResultListAdapter(this, studentList, Glide.with(this));
         studentView.setAdapter(adapter);
@@ -65,7 +86,7 @@ public class TestResultActivity extends AppCompatActivity {
 
         studentList = new ArrayList<>();
 
-        db.collection("students")
+        db.collection("students").orderBy("name")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -77,11 +98,12 @@ public class TestResultActivity extends AppCompatActivity {
                                 String name = studentData.get("name").toString();
                                 String age = studentData.get("birth").toString();
                                 String photo = studentData.get("photo").toString();
-                                Student student = new Student(id, name, age, photo);
+                                String teacher = studentData.get("teacher").toString();
+                                Student student = new Student(id, name, age, photo, teacher);
 
                                 studentList.add(student);
                             }
-                            adapter.notifyDataSetChanged();
+                            adapter.getFilter().filter("");
                         } else {
                             Toast.makeText(getApplicationContext(),getString(R.string.data_receive_fail), Toast.LENGTH_SHORT).show();
                             Log.d(getClass().getName(), getString(R.string.data_receive_fail));

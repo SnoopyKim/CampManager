@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -22,6 +23,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -33,6 +35,7 @@ public class StudentActivity extends AppCompatActivity {
 
     ImageView ivStudentProfile;
     TextView tvStudentName, tvStudentBirth;
+    EditText etStudentTeacher;
 
     Student studentData;
 
@@ -56,6 +59,9 @@ public class StudentActivity extends AppCompatActivity {
         tvStudentBirth = findViewById(R.id.tv_student_birth);
         tvStudentBirth.setText(studentData.getAge());
 
+        etStudentTeacher = findViewById(R.id.et_student_teacher);
+        etStudentTeacher.setText(studentData.getTeacher());
+
         ivStudentProfile = findViewById(R.id.iv_student_image);
         Glide
                 .with(getApplicationContext())
@@ -76,6 +82,15 @@ public class StudentActivity extends AppCompatActivity {
             }
         });
 
+        Button btnConfirmTeacher = findViewById(R.id.btn_confirm_teacher);
+        btnConfirmTeacher.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.show();
+                confirmTeacherChanged();
+            }
+        });
+
         Button btnShowResult = findViewById(R.id.btn_show_result);
         btnShowResult.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,6 +103,8 @@ public class StudentActivity extends AppCompatActivity {
 
         if (MainActivity.user == null) {
             btnChageProfile.setVisibility(View.GONE);
+            etStudentTeacher.setEnabled(false);
+            btnConfirmTeacher.setVisibility(View.INVISIBLE);
             btnShowResult.setVisibility(View.GONE);
         }
     }
@@ -110,7 +127,7 @@ public class StudentActivity extends AppCompatActivity {
                 public void onComplete(@NonNull Task<Uri> task) {
                     if (task.isSuccessful() && task.getResult()!=null) {
                         Toast.makeText(getApplicationContext(), getString(R.string.profile_upload_success), Toast.LENGTH_SHORT).show();
-                        FirebaseFirestore.getInstance().collection("students").document(studentData.getId())
+                        db.collection("students").document(studentData.getId())
                                 .update("photo", task.getResult().toString());
                     } else {
                         Toast.makeText(getApplicationContext(), getString(R.string.profile_upload_failure), Toast.LENGTH_SHORT).show();
@@ -127,6 +144,26 @@ public class StudentActivity extends AppCompatActivity {
                     .into(ivStudentProfile);
         }
     }
+
+    private void confirmTeacherChanged() {
+        final String stTeacher = etStudentTeacher.getText().toString();
+        db.collection("teachers").whereEqualTo("name", stTeacher)
+                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful() && task.getResult() != null && !task.getResult().isEmpty()) {
+                    Toast.makeText(getApplicationContext(), "변경 성공!", Toast.LENGTH_SHORT).show();
+                    db.collection("students").document(studentData.getId()).update("teacher", stTeacher);
+                } else if (task.getResult() != null && task.getResult().isEmpty()) {
+                    Toast.makeText(getApplicationContext(), "해당 이름의 선생님이 없습니다.", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getApplicationContext(), "오류가 생겼습니다. 다시 시도해주세요.", Toast.LENGTH_SHORT).show();
+                }
+                dialog.dismiss();
+            }
+        });
+    }
+
 
     private void setBackButton() {
         ImageButton ibBack = findViewById(R.id.btn_back);

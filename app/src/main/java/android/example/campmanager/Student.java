@@ -7,25 +7,23 @@ public class Student implements Serializable {
     private String name;
     private String age;
     private String photo;
+    private String teacher;
 
     /*
         Data objects requires that any objects to have a public no-argument constuctor.
         Thi is needed to instantiate that that particular object.
      */
     public Student() { }
-    public Student(String id, String name, String age, String photo) {
+    public Student(String id, String name, String age, String photo, String teacher) {
         this.id = id;
         this.name = name;
         this.age = age;
         this.photo = photo;
+        this.teacher = teacher;
     }
 
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getAge() {
@@ -40,7 +38,7 @@ public class Student implements Serializable {
         return id;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public String getTeacher() {
+        return teacher;
     }
 }

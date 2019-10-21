@@ -108,6 +108,7 @@ public class AddStudentActivity extends AppCompatActivity {
         Map<String, String> student = new HashMap<>();
         student.put("name", name);
         student.put("birth", birth);
+        student.put("teacher", MainActivity.user.getDisplayName());
 
         db.collection("students")
                 .add(student)

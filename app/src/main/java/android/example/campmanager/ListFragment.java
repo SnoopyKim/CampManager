@@ -30,10 +30,9 @@ import java.util.List;
 
 public class ListFragment extends Fragment {
 
-    FirebaseFirestore db;
+    private FirebaseFirestore db;
 
-    private RecyclerView studentListView;
-    public StudentListAdapter adapter;
+    private StudentListAdapter adapter;
     private ArrayList<Student> studentList;
 
     LoadingDialog dialog;
@@ -49,7 +48,7 @@ public class ListFragment extends Fragment {
 
         callStudentData();
 
-        studentListView = v.findViewById(R.id.rv_student);
+        RecyclerView studentListView = v.findViewById(R.id.rv_student);
         adapter = new StudentListAdapter(getActivity(), studentList, Glide.with(getActivity()));
         studentListView.setAdapter(adapter);
         studentListView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -68,22 +67,23 @@ public class ListFragment extends Fragment {
         return v;
     }
 
-    void callStudentData() {
+    private void callStudentData() {
         // Call students data
         db = FirebaseFirestore.getInstance();
-        db.collection("students")
+        db.collection("students").orderBy("name")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
-                            Log.d(getClass().getName(), getString(R.string.data_receive_success));
+                            Log.d("callStudentData", getString(R.string.data_receive_success));
                             for (QueryDocumentSnapshot studentData : task.getResult()) {
                                 String id = studentData.getId();
                                 String name = studentData.get("name").toString();
                                 String age = studentData.get("birth").toString();
                                 String photo = studentData.get("photo").toString();
-                                Student student = new Student(id, name, age, photo);
+                                String teacher = studentData.get("teacher").toString();
+                                Student student = new Student(id, name, age, photo, teacher);
                                 studentList.add(student);
                             }
                             adapter.notifyDataSetChanged();
